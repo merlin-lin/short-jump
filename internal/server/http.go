@@ -2,6 +2,7 @@ package server
 
 import (
 	v1 "short-jump/api/helloworld/v1"
+	short "short-jump/api/shorturl/v1"
 	"short-jump/internal/conf"
 	"short-jump/internal/service"
 
@@ -28,5 +29,26 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, logger log.L
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterGreeterHTTPServer(srv, greeter)
+	return srv
+}
+
+// NewHTTPShorturlServer  new an HTTP server.
+func NewHTTPShorturlServer(c *conf.Server, shortServ *service.ShorturlService, logger log.Logger) *http.Server {
+	var opts = []http.ServerOption{
+		http.Middleware(
+			recovery.Recovery(),
+		),
+	}
+	if c.Http.Network != "" {
+		opts = append(opts, http.Network(c.Http.Network))
+	}
+	if c.Http.Addr != "" {
+		opts = append(opts, http.Address(c.Http.Addr))
+	}
+	if c.Http.Timeout != nil {
+		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
+	}
+	srv := http.NewServer(opts...)
+	short.RegisterShorturlHTTPServer(srv, shortServ)
 	return srv
 }

@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package api.shorturl.v1;
+
+option go_package = "short-jump/api/shorturl/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.shorturl.v1";
+
+import "google/api/annotations.proto";
+
+service Shorturl {
+	rpc CreateShorturl (CreateShorturlRequest) returns (CreateShorturlReply) {
+		option (google.api.http) = {
+			post: "/v1/shorturl"
+			body: "*"
+		};
+	};
+	rpc UpdateShorturl (UpdateShorturlRequest) returns (UpdateShorturlReply);
+	rpc DeleteShorturl (DeleteShorturlRequest) returns (DeleteShorturlReply);
+	rpc GetShorturl (GetShorturlRequest) returns (GetShorturlReply);
+	rpc ListShorturl (ListShorturlRequest) returns (ListShorturlReply);
+
+  rpc Hello(HelloReq) returns (HelloResp) {
+    option (google.api.http) = {
+      get: "/helloshort/{name}"
+    };
+  }
+}
+
+message CreateShorturlRequest {
+	string url = 1;
+}
+message CreateShorturlReply {}
+
+message UpdateShorturlRequest {}
+message UpdateShorturlReply {}
+
+message DeleteShorturlRequest {}
+message DeleteShorturlReply {}
+
+message GetShorturlRequest {}
+message GetShorturlReply {}
+
+message ListShorturlRequest {}
+message ListShorturlReply {}
+
+message HelloReq {
+	string name = 1;
+}
+message HelloResp {
+	string message = 1;
+}
+

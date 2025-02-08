@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package usermanagement;
+
+option go_package = "github.com/yourusername/yourproject/pkg/user";
+import "google/api/annotations.proto";  // 引入 gRPC-Gateway 的注解文件
+
+// User management service definition
+service UserService {
+	// 创建用户
+	rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+		option (google.api.http) = {
+			post: "/api/v1/users"
+			body: "*"
+		};
+	}
+
+	// 获取用户信息
+	rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+		option (google.api.http) = {
+			get: "/api/v1/users/{id}"
+		};
+	}
+
+	// 更新用户信息
+	rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+		option (google.api.http) = {
+			put: "/api/v1/users/{id}"
+			body: "*"
+		};
+	}
+
+	// 禁用用户
+	rpc DisableUser(DisableUserRequest) returns (DisableUserResponse) {
+		option (google.api.http) = {
+			patch: "/api/v1/users/{id}/disable"
+		};
+	}
+
+	// 启用用户
+	rpc EnableUser(EnableUserRequest) returns (EnableUserResponse) {
+		option (google.api.http) = {
+			patch: "/api/v1/users/{id}/enable"
+		};
+	}
+
+	// 删除用户（软删除）
+	rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+		option (google.api.http) = {
+			delete: "/api/v1/users/{id}"
+		};
+	}
+}
+
+// 请求与响应消息定义
+
+message CreateUserRequest {
+	string email = 1;
+	string phone = 2;
+	string username = 3;
+	string password = 4;
+	string avatar_url = 5;
+	string bio = 6;
+}
+
+message CreateUserResponse {
+	int32 id = 1;
+	int32 status = 2;
+}
+
+message GetUserRequest {
+	int32 id = 1;
+}
+
+message GetUserResponse {
+	int32 id = 1;
+	string email = 2;
+	string phone = 3;
+	string username = 4;
+	string avatar_url = 5;
+	string bio = 6;
+	int32 status = 7;
+}
+
+message UpdateUserRequest {
+	int32 id = 1;
+	string email = 2;
+	string phone = 3;
+	string username = 4;
+	string avatar_url = 5;
+	string bio = 6;
+	int32 status = 7;
+}
+
+message UpdateUserResponse {
+	int32 status = 1;
+}
+
+message DisableUserRequest {
+	int32 id = 1;
+}
+
+message DisableUserResponse {
+	int32 status = 1;
+}
+
+message EnableUserRequest {
+	int32 id = 1;
+}
+
+message EnableUserResponse {
+	int32 status = 1;
+}
+
+message DeleteUserRequest {
+	int32 id = 1;
+}
+
+message DeleteUserResponse {
+	int32 status = 1;
+}
