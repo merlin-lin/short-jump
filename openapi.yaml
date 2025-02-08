@@ -3,37 +3,280 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
-    description: The greeting service definition.
+    title: UserService API
+    description: User management service definition
     version: 0.0.1
 paths:
-    /helloworld/{name}:
-        get:
+    /api/v1/users:
+        post:
             tags:
-                - Greeter
-                - subgroup
-            description: Sends a greeting
-            operationId: Greeter_SayHello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
+                - UserService
+            description: 创建用户
+            operationId: UserService_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateUserRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/CreateUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{id}:
+        get:
+            tags:
+                - UserService
+            description: 获取用户信息
+            operationId: UserService_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - UserService
+            description: 更新用户信息
+            operationId: UserService_UpdateUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - UserService
+            description: 删除用户（软删除）
+            operationId: UserService_DeleteUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{id}/disable:
+        patch:
+            tags:
+                - UserService
+            description: 禁用用户
+            operationId: UserService_DisableUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DisableUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/users/{id}/enable:
+        patch:
+            tags:
+                - UserService
+            description: 启用用户
+            operationId: UserService_EnableUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/EnableUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        CreateUserRequest:
             type: object
             properties:
+                email:
+                    type: string
+                phone:
+                    type: string
+                username:
+                    type: string
+                password:
+                    type: string
+                avatarUrl:
+                    type: string
+                bio:
+                    type: string
+        CreateUserResponse:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                status:
+                    type: integer
+                    format: int32
+        DeleteUserResponse:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    format: int32
+        DisableUserResponse:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    format: int32
+        EnableUserResponse:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    format: int32
+        GetUserResponse:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                email:
+                    type: string
+                phone:
+                    type: string
+                username:
+                    type: string
+                avatarUrl:
+                    type: string
+                bio:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
                 message:
                     type: string
-            description: The response message containing the greetings
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateUserRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                email:
+                    type: string
+                phone:
+                    type: string
+                username:
+                    type: string
+                avatarUrl:
+                    type: string
+                bio:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+        UpdateUserResponse:
+            type: object
+            properties:
+                status:
+                    type: integer
+                    format: int32
 tags:
-    - name: Greeter
+    - name: UserService
