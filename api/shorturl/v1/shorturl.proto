@@ -3,8 +3,7 @@ syntax = "proto3";
 package api.shorturl.v1;
 
 option go_package = "short-jump/api/shorturl/v1;v1";
-option java_multiple_files = true;
-option java_package = "api.shorturl.v1";
+
 
 import "google/api/annotations.proto";
 
