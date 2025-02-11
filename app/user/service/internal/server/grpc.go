@@ -2,8 +2,8 @@ package server
 
 import (
 	v1 "short-jump/api/helloworld/v1"
-	"short-jump/internal/conf"
-	"short-jump/internal/service"
+	"short-jump/app/user/service/internal/conf"
+	"short-jump/app/user/service/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"

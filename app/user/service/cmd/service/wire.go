@@ -6,11 +6,11 @@
 package main
 
 import (
-	"short-jump/internal/biz"
-	"short-jump/internal/conf"
-	"short-jump/internal/data"
-	"short-jump/internal/server"
-	"short-jump/internal/service"
+	"short-jump/app/user/service/internal/biz"
+	"short-jump/app/user/service/internal/conf"
+	"short-jump/app/user/service/internal/data"
+	"short-jump/app/user/service/internal/server"
+	"short-jump/app/user/service/internal/service"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"

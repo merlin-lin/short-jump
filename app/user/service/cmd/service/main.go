@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	"short-jump/internal/conf"
+	"short-jump/app/user/service/internal/conf"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"

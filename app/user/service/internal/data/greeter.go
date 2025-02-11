@@ -3,7 +3,7 @@ package data
 import (
 	"context"
 
-	"short-jump/internal/biz"
+	"short-jump/app/user/service/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
 )

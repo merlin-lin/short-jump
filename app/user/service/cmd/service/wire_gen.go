@@ -9,11 +9,11 @@ package main
 import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
-	"short-jump/internal/biz"
-	"short-jump/internal/conf"
-	"short-jump/internal/data"
-	"short-jump/internal/server"
-	"short-jump/internal/service"
+	"short-jump/app/user/service/internal/biz"
+	"short-jump/app/user/service/internal/conf"
+	"short-jump/app/user/service/internal/data"
+	"short-jump/app/user/service/internal/server"
+	"short-jump/app/user/service/internal/service"
 )
 
 import (
@@ -24,11 +24,7 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	db, err := data.NewDbEngine(confData)
-	if err != nil {
-		return nil, nil, err
-	}
-	dataData, cleanup, err := data.NewData(confData, logger, db)
+	dataData, cleanup, err := data.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}

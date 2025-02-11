@@ -4,7 +4,7 @@ import (
 	"context"
 
 	v1 "short-jump/api/helloworld/v1"
-	"short-jump/internal/biz"
+	"short-jump/app/user/service/internal/biz"
 )
 
 // GreeterService is a greeter service.
