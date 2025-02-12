@@ -1,6 +1,11 @@
 package server
 
 import (
+	"context"
+
+	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"github.com/go-kratos/kratos/v2/middleware/selector"
+
 	v1 "short-jump/api/user/v1"
 	//v1 "short-jump/api/helloworld/v1"
 	"short-jump/app/user/service/internal/conf"
@@ -9,13 +14,37 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	jwt2 "github.com/golang-jwt/jwt/v5"
 )
 
+func NewWhiteListMatcher() selector.MatchFunc {
+
+	whiteList := make(map[string]struct{})
+	whiteList["/api/v1/login"] = struct{}{}
+	whiteList["/api/v1/register"] = struct{}{}
+
+	return func(ctx context.Context, operation string) bool {
+		if _, ok := whiteList[operation]; ok {
+			return false
+		}
+		return true
+	}
+}
+
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger, ac *conf.Auth) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
+			selector.Server(
+				jwt.Server(func(token *jwt2.Token) (interface{}, error) {
+					return []byte(ac.ApiKey), nil
+				}, jwt.WithSigningMethod(jwt2.SigningMethodHS256), jwt.WithClaims(func() jwt2.Claims {
+					return &jwt2.MapClaims{}
+				})),
+			).
+				Match(NewWhiteListMatcher()).
+				Build(),
 		),
 	}
 	if c.Http.Network != "" {

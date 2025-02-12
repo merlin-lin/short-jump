@@ -18,6 +18,9 @@ type User struct {
 
 type UserRepo interface {
 	GetUser(ctx context.Context, id int32) (*User, error)
+	FindByUsername(ctx context.Context, username string) (*User, error)
+
+	VerifyPassword(ctx context.Context, u *User, password string) error
 }
 
 type UserUsecase struct {

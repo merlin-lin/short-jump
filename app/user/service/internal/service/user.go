@@ -28,6 +28,7 @@ func (s *UserService) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.
 		Status:    int32(x.Status),
 	}, nil
 }
+
 func (s *UserService) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
 	return &pb.UpdateUserResponse{}, nil
 }
