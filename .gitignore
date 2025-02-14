@@ -37,5 +37,5 @@ bin/
 .idea/
 *.swp
 
-
+app/user/service/configs/config.yaml
 openapi.yaml
