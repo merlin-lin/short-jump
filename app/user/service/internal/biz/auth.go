@@ -3,9 +3,11 @@ package biz
 import (
 	"context"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 
 	v1 "short-jump/api/user/v1"
+	"short-jump/app/user/service/internal/conf"
 )
 
 type AuthUsecase struct {
@@ -13,9 +15,9 @@ type AuthUsecase struct {
 	userRepo UserRepo
 }
 
-func NewAuthUsecase(userRepo UserRepo) *AuthUsecase {
+func NewAuthUsecase(userRepo UserRepo, conf *conf.Auth) *AuthUsecase {
 	return &AuthUsecase{
-		key:      "",
+		key:      conf.ApiKey,
 		userRepo: userRepo,
 	}
 }
@@ -65,14 +67,17 @@ func (a *AuthUsecase) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		return nil, err
 	}
 
-	//claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-	//	"user_id": user.Id,
-	//})
-	//
-	//signedString, err := claims.SignedString([]byte(a.key))
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.Id,
+	})
+
+	signedString, err := claims.SignedString([]byte(a.key))
+	if err != nil {
+		return nil, err
+	}
 
 	return &v1.LoginResponse{
-		Token: "xxxx",
+		Token: signedString,
 		User: &v1.GetUserResponse{
 			Id:        0,
 			Email:     user.Email,
