@@ -18,13 +18,13 @@ type userRepo struct {
 
 type User struct {
 	gorm.Model
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Avatar   string `json:"avatar"`
-	Bio      string `json:"bio"`
-	Status   int    `json:"status"`
+	Email        string `json:"email"`
+	Phone        string `json:"phone"`
+	Username     string `json:"username"`
+	PasswordHash string `json:"password_hash"`
+	Avatar       string `json:"avatar"`
+	Bio          string `json:"bio"`
+	Status       int    `json:"status"`
 }
 
 func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
@@ -64,6 +64,23 @@ func (u *userRepo) FindByUsername(ctx context.Context, username string) (*biz.Us
 	}, result.Error
 }
 
-func (u *userRepo) VerifyPassword(ctx context.Context, u2 *biz.User, password string) error {
-	return nil
+func (u *userRepo) FindByEmail(ctx context.Context, email string) (*biz.User, error) {
+	user := User{}
+	result := u.data.db.WithContext(ctx).Where("email = ?", email).First(&user)
+
+	return &biz.User{
+		Id:           int(user.ID),
+		Username:     user.Username,
+		Email:        user.Email,
+		Phone:        user.Phone,
+		AvatarUrl:    user.Avatar,
+		Bio:          user.Bio,
+		Status:       int8(user.Status),
+		PasswordHash: user.PasswordHash,
+	}, result.Error
+}
+
+func (u *userRepo) CreateUser(ctx context.Context, user *biz.User) error {
+	res := u.data.db.WithContext(ctx).Create(user)
+	return res.Error
 }

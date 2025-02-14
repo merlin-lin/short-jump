@@ -3,7 +3,8 @@ package server
 import (
 	"context"
 
-	"github.com/go-kratos/kratos/v2/middleware/auth/jwt"
+	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 
 	v1 "short-jump/api/user/v1"
@@ -11,17 +12,15 @@ import (
 	"short-jump/app/user/service/internal/conf"
 	"short-jump/app/user/service/internal/service"
 
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	jwt2 "github.com/golang-jwt/jwt/v5"
 )
 
 func NewWhiteListMatcher() selector.MatchFunc {
 
 	whiteList := make(map[string]struct{})
-	whiteList["/api/v1/login"] = struct{}{}
-	whiteList["/api/v1/register"] = struct{}{}
+	whiteList["/user.v1.User/Login"] = struct{}{}
+	//whiteList["/user.v1.User/Register"] = struct{}{}
 
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whiteList[operation]; ok {
@@ -32,19 +31,20 @@ func NewWhiteListMatcher() selector.MatchFunc {
 }
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger, ac *conf.Auth) *http.Server {
+func NewHTTPServer(c *conf.Server, logger log.Logger, user *service.UserService) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			selector.Server(
-				jwt.Server(func(token *jwt2.Token) (interface{}, error) {
-					return []byte(ac.ApiKey), nil
-				}, jwt.WithSigningMethod(jwt2.SigningMethodHS256), jwt.WithClaims(func() jwt2.Claims {
-					return &jwt2.MapClaims{}
-				})),
-			).
-				Match(NewWhiteListMatcher()).
-				Build(),
+			logging.Server(logger),
+			//selector.Server(
+			//	jwt.Server(func(token *jwt2.Token) (interface{}, error) {
+			//		return []byte(ac.ApiKey), nil
+			//	}, jwt.WithSigningMethod(jwt2.SigningMethodHS256), jwt.WithClaims(func() jwt2.Claims {
+			//		return &jwt2.MapClaims{}
+			//	})),
+			//).
+			//	Match(NewWhiteListMatcher()).
+			//	Build(),
 		),
 	}
 	if c.Http.Network != "" {

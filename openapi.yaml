@@ -3,7 +3,8 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: User API
+    description: User management service definition
     version: 0.0.1
 paths:
     /api/v1/login:
@@ -16,7 +17,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/user.v1.LoginRequest'
+                            $ref: '#/components/schemas/LoginRequest'
                 required: true
             responses:
                 "200":
@@ -24,7 +25,38 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/user.v1.LoginResponse'
+                                $ref: '#/components/schemas/LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/register:
+        post:
+            tags:
+                - User
+            description: 用户注册
+            operationId: User_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/RegisterRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LoginResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users:
         post:
             tags:
@@ -35,7 +67,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/user.v1.CreateUserRequest'
+                            $ref: '#/components/schemas/CreateUserRequest'
                 required: true
             responses:
                 "200":
@@ -43,7 +75,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/user.v1.CreateUserResponse'
+                                $ref: '#/components/schemas/CreateUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users/{id}:
         get:
             tags:
@@ -63,7 +101,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/user.v1.GetUserResponse'
+                                $ref: '#/components/schemas/GetUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         put:
             tags:
                 - User
@@ -80,7 +124,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/user.v1.UpdateUserRequest'
+                            $ref: '#/components/schemas/UpdateUserRequest'
                 required: true
             responses:
                 "200":
@@ -88,7 +132,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/user.v1.UpdateUserResponse'
+                                $ref: '#/components/schemas/UpdateUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         delete:
             tags:
                 - User
@@ -107,7 +157,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/user.v1.DeleteUserResponse'
+                                $ref: '#/components/schemas/DeleteUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users/{id}/disable:
         patch:
             tags:
@@ -127,7 +183,13 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/user.v1.DisableUserResponse'
+                                $ref: '#/components/schemas/DisableUserResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /api/v1/users/{id}/enable:
         patch:
             tags:
@@ -147,84 +209,16 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/user.v1.EnableUserResponse'
-    /helloshort/{name}:
-        get:
-            tags:
-                - Shorturl
-            operationId: Shorturl_Hello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
+                                $ref: '#/components/schemas/EnableUserResponse'
+                default:
+                    description: Default error response
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.shorturl.v1.HelloResp'
-    /helloworld/{name}:
-        get:
-            tags:
-                - Greeter
-            description: Sends a greeting
-            operationId: Greeter_SayHello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
-    /v1/shorturl:
-        post:
-            tags:
-                - Shorturl
-            operationId: Shorturl_CreateShorturl
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/api.shorturl.v1.CreateShorturlRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/api.shorturl.v1.CreateShorturlReply'
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
-        api.shorturl.v1.CreateShorturlReply:
-            type: object
-            properties: {}
-        api.shorturl.v1.CreateShorturlRequest:
-            type: object
-            properties:
-                url:
-                    type: string
-        api.shorturl.v1.HelloResp:
-            type: object
-            properties:
-                message:
-                    type: string
-        helloworld.v1.HelloReply:
-            type: object
-            properties:
-                message:
-                    type: string
-            description: The response message containing the greetings
-        user.v1.CreateUserRequest:
+        CreateUserRequest:
             type: object
             properties:
                 email:
@@ -239,7 +233,7 @@ components:
                     type: string
                 bio:
                     type: string
-        user.v1.CreateUserResponse:
+        CreateUserResponse:
             type: object
             properties:
                 id:
@@ -248,25 +242,25 @@ components:
                 status:
                     type: integer
                     format: int32
-        user.v1.DeleteUserResponse:
+        DeleteUserResponse:
             type: object
             properties:
                 status:
                     type: integer
                     format: int32
-        user.v1.DisableUserResponse:
+        DisableUserResponse:
             type: object
             properties:
                 status:
                     type: integer
                     format: int32
-        user.v1.EnableUserResponse:
+        EnableUserResponse:
             type: object
             properties:
                 status:
                     type: integer
                     format: int32
-        user.v1.GetUserResponse:
+        GetUserResponse:
             type: object
             properties:
                 id:
@@ -285,21 +279,60 @@ components:
                 status:
                     type: integer
                     format: int32
-        user.v1.LoginRequest:
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        LoginRequest:
             type: object
             properties:
                 email:
                     type: string
                 password:
                     type: string
-        user.v1.LoginResponse:
+        LoginResponse:
             type: object
             properties:
                 token:
                     type: string
                 User:
-                    $ref: '#/components/schemas/user.v1.GetUserResponse'
-        user.v1.UpdateUserRequest:
+                    $ref: '#/components/schemas/GetUserResponse'
+        RegisterRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                phone:
+                    type: string
+                username:
+                    type: string
+                avatarUrl:
+                    type: string
+                bio:
+                    type: string
+                password:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateUserRequest:
             type: object
             properties:
                 id:
@@ -318,15 +351,11 @@ components:
                 status:
                     type: integer
                     format: int32
-        user.v1.UpdateUserResponse:
+        UpdateUserResponse:
             type: object
             properties:
                 status:
                     type: integer
                     format: int32
 tags:
-    - name: Greeter
-      description: The greeting service definition.
-    - name: Shorturl
     - name: User
-      description: User management service definition

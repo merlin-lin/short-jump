@@ -7,7 +7,11 @@ import (
 )
 
 func (s *UserService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	return &pb.LoginResponse{}, nil
+	return s.ac.Login(ctx, req)
+}
+
+func (s *UserService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.LoginResponse, error) {
+	return s.ac.Register(ctx, req)
 }
 func (s *UserService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	return &pb.CreateUserResponse{}, nil

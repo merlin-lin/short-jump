@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.8.3
 // - protoc             v5.29.3
-// source: user/v1/user.proto
+// source: api/user/v1/user.proto
 
 package v1
 
@@ -25,6 +25,7 @@ const OperationUserDisableUser = "/user.v1.User/DisableUser"
 const OperationUserEnableUser = "/user.v1.User/EnableUser"
 const OperationUserGetUser = "/user.v1.User/GetUser"
 const OperationUserLogin = "/user.v1.User/Login"
+const OperationUserRegister = "/user.v1.User/Register"
 const OperationUserUpdateUser = "/user.v1.User/UpdateUser"
 
 type UserHTTPServer interface {
@@ -40,6 +41,8 @@ type UserHTTPServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	// Login 用户登录
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	// Register 用户注册
+	Register(context.Context, *RegisterRequest) (*LoginResponse, error)
 	// UpdateUser 更新用户信息
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 }
@@ -47,6 +50,7 @@ type UserHTTPServer interface {
 func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/v1/login", _User_Login0_HTTP_Handler(srv))
+	r.POST("/api/v1/register", _User_Register0_HTTP_Handler(srv))
 	r.POST("/api/v1/users", _User_CreateUser0_HTTP_Handler(srv))
 	r.GET("/api/v1/users/{id}", _User_GetUser0_HTTP_Handler(srv))
 	r.PUT("/api/v1/users/{id}", _User_UpdateUser0_HTTP_Handler(srv))
@@ -67,6 +71,28 @@ func _User_Login0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error 
 		http.SetOperation(ctx, OperationUserLogin)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.Login(ctx, req.(*LoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _User_Register0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RegisterRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserRegister)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Register(ctx, req.(*RegisterRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -219,6 +245,7 @@ type UserHTTPClient interface {
 	EnableUser(ctx context.Context, req *EnableUserRequest, opts ...http.CallOption) (rsp *EnableUserResponse, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserResponse, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
+	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *LoginResponse, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserResponse, err error)
 }
 
@@ -300,6 +327,19 @@ func (c *UserHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts .
 	pattern := "/api/v1/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *UserHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*LoginResponse, error) {
+	var out LoginResponse
+	pattern := "/api/v1/register"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserRegister))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
