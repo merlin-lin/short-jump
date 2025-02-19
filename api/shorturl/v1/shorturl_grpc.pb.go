@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.3
-// source: shorturl/v1/shorturl.proto
+// source: api/shorturl/v1/shorturl.proto
 
 package v1
 
@@ -19,293 +19,189 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Shorturl_CreateShorturl_FullMethodName = "/api.shorturl.v1.Shorturl/CreateShorturl"
-	Shorturl_UpdateShorturl_FullMethodName = "/api.shorturl.v1.Shorturl/UpdateShorturl"
-	Shorturl_DeleteShorturl_FullMethodName = "/api.shorturl.v1.Shorturl/DeleteShorturl"
-	Shorturl_GetShorturl_FullMethodName    = "/api.shorturl.v1.Shorturl/GetShorturl"
-	Shorturl_ListShorturl_FullMethodName   = "/api.shorturl.v1.Shorturl/ListShorturl"
-	Shorturl_Hello_FullMethodName          = "/api.shorturl.v1.Shorturl/Hello"
+	ShortURLService_GenerateShortURL_FullMethodName = "/ShortURLService/GenerateShortURL"
+	ShortURLService_ResolveShortURL_FullMethodName  = "/ShortURLService/ResolveShortURL"
+	ShortURLService_GetShortURLStats_FullMethodName = "/ShortURLService/GetShortURLStats"
 )
 
-// ShorturlClient is the client API for Shorturl service.
+// ShortURLServiceClient is the client API for ShortURLService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ShorturlClient interface {
-	CreateShorturl(ctx context.Context, in *CreateShorturlRequest, opts ...grpc.CallOption) (*CreateShorturlReply, error)
-	UpdateShorturl(ctx context.Context, in *UpdateShorturlRequest, opts ...grpc.CallOption) (*UpdateShorturlReply, error)
-	DeleteShorturl(ctx context.Context, in *DeleteShorturlRequest, opts ...grpc.CallOption) (*DeleteShorturlReply, error)
-	GetShorturl(ctx context.Context, in *GetShorturlRequest, opts ...grpc.CallOption) (*GetShorturlReply, error)
-	ListShorturl(ctx context.Context, in *ListShorturlRequest, opts ...grpc.CallOption) (*ListShorturlReply, error)
-	Hello(ctx context.Context, in *HelloReq, opts ...grpc.CallOption) (*HelloResp, error)
+//
+// 短链服务
+type ShortURLServiceClient interface {
+	// 短链生成接口
+	GenerateShortURL(ctx context.Context, in *GenerateRequest, opts ...grpc.CallOption) (*GenerateResponse, error)
+	// 短链解析接口
+	ResolveShortURL(ctx context.Context, in *ResolveRequest, opts ...grpc.CallOption) (*ResolveResponse, error)
+	// 获取商户的短链统计数据
+	GetShortURLStats(ctx context.Context, in *ShortURLStatsRequest, opts ...grpc.CallOption) (*ShortURLStatsResponse, error)
 }
 
-type shorturlClient struct {
+type shortURLServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewShorturlClient(cc grpc.ClientConnInterface) ShorturlClient {
-	return &shorturlClient{cc}
+func NewShortURLServiceClient(cc grpc.ClientConnInterface) ShortURLServiceClient {
+	return &shortURLServiceClient{cc}
 }
 
-func (c *shorturlClient) CreateShorturl(ctx context.Context, in *CreateShorturlRequest, opts ...grpc.CallOption) (*CreateShorturlReply, error) {
+func (c *shortURLServiceClient) GenerateShortURL(ctx context.Context, in *GenerateRequest, opts ...grpc.CallOption) (*GenerateResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateShorturlReply)
-	err := c.cc.Invoke(ctx, Shorturl_CreateShorturl_FullMethodName, in, out, cOpts...)
+	out := new(GenerateResponse)
+	err := c.cc.Invoke(ctx, ShortURLService_GenerateShortURL_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *shorturlClient) UpdateShorturl(ctx context.Context, in *UpdateShorturlRequest, opts ...grpc.CallOption) (*UpdateShorturlReply, error) {
+func (c *shortURLServiceClient) ResolveShortURL(ctx context.Context, in *ResolveRequest, opts ...grpc.CallOption) (*ResolveResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateShorturlReply)
-	err := c.cc.Invoke(ctx, Shorturl_UpdateShorturl_FullMethodName, in, out, cOpts...)
+	out := new(ResolveResponse)
+	err := c.cc.Invoke(ctx, ShortURLService_ResolveShortURL_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *shorturlClient) DeleteShorturl(ctx context.Context, in *DeleteShorturlRequest, opts ...grpc.CallOption) (*DeleteShorturlReply, error) {
+func (c *shortURLServiceClient) GetShortURLStats(ctx context.Context, in *ShortURLStatsRequest, opts ...grpc.CallOption) (*ShortURLStatsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteShorturlReply)
-	err := c.cc.Invoke(ctx, Shorturl_DeleteShorturl_FullMethodName, in, out, cOpts...)
+	out := new(ShortURLStatsResponse)
+	err := c.cc.Invoke(ctx, ShortURLService_GetShortURLStats_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *shorturlClient) GetShorturl(ctx context.Context, in *GetShorturlRequest, opts ...grpc.CallOption) (*GetShorturlReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetShorturlReply)
-	err := c.cc.Invoke(ctx, Shorturl_GetShorturl_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *shorturlClient) ListShorturl(ctx context.Context, in *ListShorturlRequest, opts ...grpc.CallOption) (*ListShorturlReply, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListShorturlReply)
-	err := c.cc.Invoke(ctx, Shorturl_ListShorturl_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *shorturlClient) Hello(ctx context.Context, in *HelloReq, opts ...grpc.CallOption) (*HelloResp, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(HelloResp)
-	err := c.cc.Invoke(ctx, Shorturl_Hello_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// ShorturlServer is the server API for Shorturl service.
-// All implementations must embed UnimplementedShorturlServer
+// ShortURLServiceServer is the server API for ShortURLService service.
+// All implementations must embed UnimplementedShortURLServiceServer
 // for forward compatibility.
-type ShorturlServer interface {
-	CreateShorturl(context.Context, *CreateShorturlRequest) (*CreateShorturlReply, error)
-	UpdateShorturl(context.Context, *UpdateShorturlRequest) (*UpdateShorturlReply, error)
-	DeleteShorturl(context.Context, *DeleteShorturlRequest) (*DeleteShorturlReply, error)
-	GetShorturl(context.Context, *GetShorturlRequest) (*GetShorturlReply, error)
-	ListShorturl(context.Context, *ListShorturlRequest) (*ListShorturlReply, error)
-	Hello(context.Context, *HelloReq) (*HelloResp, error)
-	mustEmbedUnimplementedShorturlServer()
+//
+// 短链服务
+type ShortURLServiceServer interface {
+	// 短链生成接口
+	GenerateShortURL(context.Context, *GenerateRequest) (*GenerateResponse, error)
+	// 短链解析接口
+	ResolveShortURL(context.Context, *ResolveRequest) (*ResolveResponse, error)
+	// 获取商户的短链统计数据
+	GetShortURLStats(context.Context, *ShortURLStatsRequest) (*ShortURLStatsResponse, error)
+	mustEmbedUnimplementedShortURLServiceServer()
 }
 
-// UnimplementedShorturlServer must be embedded to have
+// UnimplementedShortURLServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedShorturlServer struct{}
+type UnimplementedShortURLServiceServer struct{}
 
-func (UnimplementedShorturlServer) CreateShorturl(context.Context, *CreateShorturlRequest) (*CreateShorturlReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateShorturl not implemented")
+func (UnimplementedShortURLServiceServer) GenerateShortURL(context.Context, *GenerateRequest) (*GenerateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenerateShortURL not implemented")
 }
-func (UnimplementedShorturlServer) UpdateShorturl(context.Context, *UpdateShorturlRequest) (*UpdateShorturlReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateShorturl not implemented")
+func (UnimplementedShortURLServiceServer) ResolveShortURL(context.Context, *ResolveRequest) (*ResolveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResolveShortURL not implemented")
 }
-func (UnimplementedShorturlServer) DeleteShorturl(context.Context, *DeleteShorturlRequest) (*DeleteShorturlReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteShorturl not implemented")
+func (UnimplementedShortURLServiceServer) GetShortURLStats(context.Context, *ShortURLStatsRequest) (*ShortURLStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetShortURLStats not implemented")
 }
-func (UnimplementedShorturlServer) GetShorturl(context.Context, *GetShorturlRequest) (*GetShorturlReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetShorturl not implemented")
-}
-func (UnimplementedShorturlServer) ListShorturl(context.Context, *ListShorturlRequest) (*ListShorturlReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListShorturl not implemented")
-}
-func (UnimplementedShorturlServer) Hello(context.Context, *HelloReq) (*HelloResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Hello not implemented")
-}
-func (UnimplementedShorturlServer) mustEmbedUnimplementedShorturlServer() {}
-func (UnimplementedShorturlServer) testEmbeddedByValue()                  {}
+func (UnimplementedShortURLServiceServer) mustEmbedUnimplementedShortURLServiceServer() {}
+func (UnimplementedShortURLServiceServer) testEmbeddedByValue()                         {}
 
-// UnsafeShorturlServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ShorturlServer will
+// UnsafeShortURLServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ShortURLServiceServer will
 // result in compilation errors.
-type UnsafeShorturlServer interface {
-	mustEmbedUnimplementedShorturlServer()
+type UnsafeShortURLServiceServer interface {
+	mustEmbedUnimplementedShortURLServiceServer()
 }
 
-func RegisterShorturlServer(s grpc.ServiceRegistrar, srv ShorturlServer) {
-	// If the following call pancis, it indicates UnimplementedShorturlServer was
+func RegisterShortURLServiceServer(s grpc.ServiceRegistrar, srv ShortURLServiceServer) {
+	// If the following call pancis, it indicates UnimplementedShortURLServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&Shorturl_ServiceDesc, srv)
+	s.RegisterService(&ShortURLService_ServiceDesc, srv)
 }
 
-func _Shorturl_CreateShorturl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateShorturlRequest)
+func _ShortURLService_GenerateShortURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GenerateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ShorturlServer).CreateShorturl(ctx, in)
+		return srv.(ShortURLServiceServer).GenerateShortURL(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Shorturl_CreateShorturl_FullMethodName,
+		FullMethod: ShortURLService_GenerateShortURL_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShorturlServer).CreateShorturl(ctx, req.(*CreateShorturlRequest))
+		return srv.(ShortURLServiceServer).GenerateShortURL(ctx, req.(*GenerateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Shorturl_UpdateShorturl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateShorturlRequest)
+func _ShortURLService_ResolveShortURL_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResolveRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ShorturlServer).UpdateShorturl(ctx, in)
+		return srv.(ShortURLServiceServer).ResolveShortURL(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Shorturl_UpdateShorturl_FullMethodName,
+		FullMethod: ShortURLService_ResolveShortURL_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShorturlServer).UpdateShorturl(ctx, req.(*UpdateShorturlRequest))
+		return srv.(ShortURLServiceServer).ResolveShortURL(ctx, req.(*ResolveRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Shorturl_DeleteShorturl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteShorturlRequest)
+func _ShortURLService_GetShortURLStats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShortURLStatsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ShorturlServer).DeleteShorturl(ctx, in)
+		return srv.(ShortURLServiceServer).GetShortURLStats(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Shorturl_DeleteShorturl_FullMethodName,
+		FullMethod: ShortURLService_GetShortURLStats_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShorturlServer).DeleteShorturl(ctx, req.(*DeleteShorturlRequest))
+		return srv.(ShortURLServiceServer).GetShortURLStats(ctx, req.(*ShortURLStatsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Shorturl_GetShorturl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetShorturlRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ShorturlServer).GetShorturl(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Shorturl_GetShorturl_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShorturlServer).GetShorturl(ctx, req.(*GetShorturlRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Shorturl_ListShorturl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListShorturlRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ShorturlServer).ListShorturl(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Shorturl_ListShorturl_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShorturlServer).ListShorturl(ctx, req.(*ListShorturlRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Shorturl_Hello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ShorturlServer).Hello(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Shorturl_Hello_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShorturlServer).Hello(ctx, req.(*HelloReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// Shorturl_ServiceDesc is the grpc.ServiceDesc for Shorturl service.
+// ShortURLService_ServiceDesc is the grpc.ServiceDesc for ShortURLService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Shorturl_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.shorturl.v1.Shorturl",
-	HandlerType: (*ShorturlServer)(nil),
+var ShortURLService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "ShortURLService",
+	HandlerType: (*ShortURLServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateShorturl",
-			Handler:    _Shorturl_CreateShorturl_Handler,
+			MethodName: "GenerateShortURL",
+			Handler:    _ShortURLService_GenerateShortURL_Handler,
 		},
 		{
-			MethodName: "UpdateShorturl",
-			Handler:    _Shorturl_UpdateShorturl_Handler,
+			MethodName: "ResolveShortURL",
+			Handler:    _ShortURLService_ResolveShortURL_Handler,
 		},
 		{
-			MethodName: "DeleteShorturl",
-			Handler:    _Shorturl_DeleteShorturl_Handler,
-		},
-		{
-			MethodName: "GetShorturl",
-			Handler:    _Shorturl_GetShorturl_Handler,
-		},
-		{
-			MethodName: "ListShorturl",
-			Handler:    _Shorturl_ListShorturl_Handler,
-		},
-		{
-			MethodName: "Hello",
-			Handler:    _Shorturl_Hello_Handler,
+			MethodName: "GetShortURLStats",
+			Handler:    _ShortURLService_GetShortURLStats_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "shorturl/v1/shorturl.proto",
+	Metadata: "api/shorturl/v1/shorturl.proto",
 }

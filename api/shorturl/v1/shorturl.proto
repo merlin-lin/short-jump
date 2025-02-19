@@ -1,52 +1,82 @@
 syntax = "proto3";
 
-package api.shorturl.v1;
-
 option go_package = "short-jump/api/shorturl/v1;v1";
 
 
-import "google/api/annotations.proto";
+//import "google/api/annotations.proto";  // 引入 gRPC-Gateway 的注解文件
 
-service Shorturl {
-	rpc CreateShorturl (CreateShorturlRequest) returns (CreateShorturlReply) {
-		option (google.api.http) = {
-			post: "/v1/shorturl"
-			body: "*"
-		};
-	};
-	rpc UpdateShorturl (UpdateShorturlRequest) returns (UpdateShorturlReply);
-	rpc DeleteShorturl (DeleteShorturlRequest) returns (DeleteShorturlReply);
-	rpc GetShorturl (GetShorturlRequest) returns (GetShorturlReply);
-	rpc ListShorturl (ListShorturlRequest) returns (ListShorturlReply);
 
-  rpc Hello(HelloReq) returns (HelloResp) {
-    option (google.api.http) = {
-      get: "/helloshort/{name}"
-    };
-  }
+// 短链服务
+service ShortURLService {
+	// 短链生成接口
+	rpc GenerateShortURL(GenerateRequest) returns (GenerateResponse);
+
+	// 短链解析接口
+	rpc ResolveShortURL(ResolveRequest) returns (ResolveResponse);
+
+	// 获取商户的短链统计数据
+	rpc GetShortURLStats(ShortURLStatsRequest) returns (ShortURLStatsResponse);
 }
 
-message CreateShorturlRequest {
-	string url = 1;
+// 短链生成请求
+message GenerateRequest {
+	// 商户 ID，表示请求来自哪个商户
+	int32 merchant_id = 1;
+
+	// 长链接
+	string long_url = 2;
+
+	// 可选：自定义短链前缀（如果商户支持）
+	string custom_prefix = 3;
 }
-message CreateShorturlReply {}
 
-message UpdateShorturlRequest {}
-message UpdateShorturlReply {}
-
-message DeleteShorturlRequest {}
-message DeleteShorturlReply {}
-
-message GetShorturlRequest {}
-message GetShorturlReply {}
-
-message ListShorturlRequest {}
-message ListShorturlReply {}
-
-message HelloReq {
-	string name = 1;
+// 短链生成响应
+message GenerateResponse {
+	// 生成的短链
+	string short_url = 1;
 }
-message HelloResp {
-	string message = 1;
+
+// 短链解析请求
+message ResolveRequest {
+	// 短链
+	string short_url = 1;
 }
+
+// 短链解析响应
+message ResolveResponse {
+	// 对应的长链接
+	string long_url = 1;
+}
+
+
+// 获取短链统计请求
+message ShortURLStatsRequest {
+	// 商户 ID
+	int32 merchant_id = 1;
+
+	// 短链 ID
+	int32 short_url_id = 2;
+}
+
+// 短链统计响应
+message ShortURLStatsResponse {
+	// 访问次数
+	int32 access_count = 1;
+
+	// 统计的访问数据（例如：来源 IP、用户代理等）
+	repeated StatData stats = 2;
+}
+
+// 访问数据
+message StatData {
+	// 访问时间
+	string access_time = 1;
+
+	// 来源 IP
+	string ip_address = 2;
+
+	// 用户代理（浏览器信息等）
+	string user_agent = 3;
+}
+
 
