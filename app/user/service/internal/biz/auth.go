@@ -43,8 +43,13 @@ func (a *AuthUsecase) Register(ctx context.Context, req *v1.RegisterRequest) (*v
 	}
 
 	// create token
+	token, err := genJWTToken(user.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	return &v1.LoginResponse{
-		Token: "xxxx",
+		Token: token,
 		User: &v1.GetUserResponse{
 			Id:        0,
 			Email:     user.Email,
@@ -67,17 +72,12 @@ func (a *AuthUsecase) Login(ctx context.Context, req *v1.LoginRequest) (*v1.Logi
 		return nil, err
 	}
 
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": user.Id,
-	})
-
-	signedString, err := claims.SignedString([]byte(a.key))
+	token, err := genJWTToken(user.Id)
 	if err != nil {
 		return nil, err
 	}
-
 	return &v1.LoginResponse{
-		Token: signedString,
+		Token: token,
 		User: &v1.GetUserResponse{
 			Id:        0,
 			Email:     user.Email,
@@ -99,4 +99,17 @@ func hashPassword(s string) string {
 
 func verifyPassword(pwd, pwdHash string) error {
 	return bcrypt.CompareHashAndPassword([]byte(pwdHash), []byte(pwd))
+}
+
+func genJWTToken(userId int) (string, error) {
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": userId,
+	})
+
+	signedString, err := claims.SignedString([]byte("secret"))
+	if err != nil {
+		return "", err
+	}
+
+	return signedString, nil
 }
